@@ -1,0 +1,19 @@
+{
+  "name": "express-mesto-gha",
+  "version": "1.0.0",
+  "description": "backend for Mesto React app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kogrms/express-mesto-gha.git"
+  },
+  "author": "Konstantin Babushkin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kogrms/express-mesto-gha/issues"
+  },
+  "homepage": "https://github.com/kogrms/express-mesto-gha#readme"
+}
