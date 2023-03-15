@@ -14,23 +14,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect(url);
-// , {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true
-// }).then(() => {
-//   console.log('Connected to MongoDB');
-//   app.listen(port, () => {
-//     console.log(`Server is listening on port ${port}...`);
-//   });
-// }).catch((err) => {
-//   console.error('Failed to connect to MongoDB:', err);
-// });
 
 app.use('/', usersRoutes);
 
-// app.get('/', (req, res) => {
-//   res.send('Hello World!');
-// });
+app.use((req, res, next) => {
+  req.user = {
+    _id: '64116c098734342bc4a5389b'
+  };
+  next();
+});
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}...`);
