@@ -24,8 +24,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.listen(port, () => {
-  console.log(`Server is listening on port ${port}...`);
-});
+app.listen(port);
 
-// app.listen(port);
+// app.listen(port, () => {
+//   console.log(`Server is listening on port ${port}...`);
+// });
