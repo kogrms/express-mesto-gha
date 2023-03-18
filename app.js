@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
-const STATUS_404 = require('./utils/constants');
+// const STATUS_404 = require('./utils/constants');
 const NotFoundError = require('./errors/not-found-error');
 
 const port = process.env.PORT || 3000;
@@ -28,7 +28,6 @@ app.use('/', cardsRoutes);
 
 app.use('/*', (req, res, next) => {
   const error = new NotFoundError('Страница не найдена');
-  error.status = STATUS_404;
   next(error);
 });
 
