@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongoose').Types;
 const User = require('../models/user');
 const { STATUS_400, STATUS_404, STATUS_500 } = require('../utils/constants');
 
@@ -21,7 +22,13 @@ const createUser = (req, res) => {
 };
 
 const getUserById = (req, res) => {
-  User.findById(req.params.userId)
+  const { userId } = req.params;
+  if (!ObjectId.isValid(userId)) {
+    res.status(STATUS_400).send({ message: 'Переданы некорректные данные' });
+    return;
+  }
+
+  User.findById(userId)
     .then((user) => {
       if (!user) {
         res.status(STATUS_404).send({ message: 'Пользователь по указанному _id не найден' });
