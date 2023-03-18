@@ -23,7 +23,7 @@ const createUser = (req, res) => {
 const getUserById = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
-      if (user == null) {
+      if (!user) {
         res.status(STATUS_404).send({ message: 'Пользователь по указанному _id не найден' });
         return;
       }
@@ -35,7 +35,7 @@ const getUserById = (req, res) => {
 const updateUserInfo = (req, res) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(
-    req.params._id,
+    req.params.userId,
     { name, about },
     { new: true, runValidators: true },
   )
@@ -58,7 +58,7 @@ const updateUserInfo = (req, res) => {
 const updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
-    req.params._id,
+    req.params.userId,
     { avatar },
     { new: true, runValidators: true },
   )
