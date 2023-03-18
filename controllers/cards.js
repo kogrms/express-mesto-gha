@@ -30,7 +30,13 @@ const deleteCard = (req, res) => {
       }
       res.send(card);
     })
-    .catch((err) => res.status(STATUS_500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(STATUS_400).send({ message: 'Переданы некорректные данные карточки' });
+        return;
+      }
+      res.status(STATUS_500).send({ message: err.message });
+    });
 };
 
 const likeCard = (req, res) => {
@@ -47,7 +53,7 @@ const likeCard = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(STATUS_400).send({ message: 'Переданы некорректные данные для постановки лайка' });
         return;
       }
@@ -69,7 +75,7 @@ const dislikeCard = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(STATUS_400).send({ message: 'Переданы некорректные данные для снятия лайка' });
         return;
       }

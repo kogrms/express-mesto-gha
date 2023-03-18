@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
+const STATUS_404 = require('./utils/constants');
 
 const port = process.env.PORT || 3000;
 const url = 'mongodb://localhost:27017/mestodb';
@@ -23,6 +24,10 @@ app.use((req, res, next) => {
 
 app.use('/', usersRoutes);
 app.use('/', cardsRoutes);
+
+app.use('/*', () => {
+  throw new Error({ message: 'Страница не найдена', status: STATUS_404 });
+});
 
 app.listen(port);
 
