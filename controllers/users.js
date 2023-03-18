@@ -1,4 +1,4 @@
-const { ObjectId } = require('mongoose').Types;
+// const { ObjectId } = require('mongoose').Types;
 const User = require('../models/user');
 const { STATUS_400, STATUS_404, STATUS_500 } = require('../utils/constants');
 
@@ -23,10 +23,10 @@ const createUser = (req, res) => {
 
 const getUserById = (req, res) => {
   const { userId } = req.params;
-  if (!ObjectId.isValid(userId)) {
-    res.status(STATUS_400).send({ message: 'Переданы некорректные данные' });
-    return;
-  }
+  // if (!ObjectId.isValid(userId)) {
+  //   res.status(STATUS_400).send({ message: 'Переданы некорректные данные' });
+  //   return;
+  // }
 
   User.findById(userId)
     .then((user) => {
@@ -36,7 +36,13 @@ const getUserById = (req, res) => {
       }
       res.send(user);
     })
-    .catch((err) => res.status(STATUS_500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
+        res.status(STATUS_400).send({ message: 'Переданы некорректные данные пользователя' });
+        return;
+      }
+      res.status(STATUS_500).send({ message: err.message });
+    });
 };
 
 const updateUserInfo = (req, res) => {
@@ -77,7 +83,7 @@ const updateUserAvatar = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         res.status(STATUS_400).send({ message: 'Переданы некорректные данные при обновлении аватара' });
         return;
       }
