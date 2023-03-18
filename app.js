@@ -8,9 +8,8 @@ const url = 'mongodb://localhost:27017/mestodb';
 
 const app = express();
 
-// применяем парсер к телу запроса в формате JSON
 app.use(bodyParser.json());
-// применяем парсер к телу запроса в формате x-www-form-urlencoded
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect(url);

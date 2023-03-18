@@ -1,10 +1,11 @@
 const Card = require('../models/card');
+const { STATUS_400, STATUS_404, STATUS_500 } = require('../utils/constants');
 
 const getCards = (req, res) => {
   Card.find({})
     .populate('owner')
     .then((cards) => res.send(cards))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(STATUS_500).send({ message: err.message }));
 };
 
 const createCard = (req, res) => {
@@ -13,10 +14,10 @@ const createCard = (req, res) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при создании карточки' });
+        res.status(STATUS_400).send({ message: 'Переданы некорректные данные при создании карточки' });
         return;
       }
-      res.status(500).send({ message: err.message });
+      res.status(STATUS_500).send({ message: err.message });
     });
 };
 
@@ -24,12 +25,12 @@ const deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: 'Карточка с указанным _id не найдена' });
+        res.status(STATUS_404).send({ message: 'Карточка с указанным _id не найдена' });
         return;
       }
       res.send(card);
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(STATUS_500).send({ message: err.message }));
 };
 
 const likeCard = (req, res) => {
@@ -40,17 +41,17 @@ const likeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: 'Передан несуществующий _id карточки' });
+        res.status(STATUS_404).send({ message: 'Передан несуществующий _id карточки' });
         return;
       }
       res.send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка' });
+        res.status(STATUS_400).send({ message: 'Переданы некорректные данные для постановки лайка' });
         return;
       }
-      res.status(500).send({ message: err.message });
+      res.status(STATUS_500).send({ message: err.message });
     });
 };
 
@@ -62,17 +63,17 @@ const dislikeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: 'Передан несуществующий _id карточки' });
+        res.status(STATUS_404).send({ message: 'Передан несуществующий _id карточки' });
         return;
       }
       res.send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные для снятия лайка' });
+        res.status(STATUS_400).send({ message: 'Переданы некорректные данные для снятия лайка' });
         return;
       }
-      res.status(500).send({ message: err.message });
+      res.status(STATUS_500).send({ message: err.message });
     });
 };
 

@@ -1,9 +1,10 @@
 const User = require('../models/user');
+const { STATUS_400, STATUS_404, STATUS_500 } = require('../utils/constants');
 
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(STATUS_500).send({ message: err.message }));
 };
 
 const createUser = (req, res) => {
@@ -12,23 +13,23 @@ const createUser = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' });
+        res.status(STATUS_400).send({ message: 'Переданы некорректные данные при создании пользователя' });
         return;
       }
-      res.status(500).send({ message: err.message });
+      res.status(STATUS_500).send({ message: err.message });
     });
 };
 
 const getUserById = (req, res) => {
   User.findById(req.params._id)
     .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'Пользователь по указанному _id не найден' });
+      if (user == null) {
+        res.status(STATUS_404).send({ message: 'Пользователь по указанному _id не найден' });
         return;
       }
       res.send(user);
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(STATUS_500).send({ message: err.message }));
 };
 
 const updateUserInfo = (req, res) => {
@@ -40,17 +41,17 @@ const updateUserInfo = (req, res) => {
   )
     .then((user) => {
       if (!user) {
-        res.status(404).send({ message: 'Пользователь с указанным _id не найден' });
+        res.status(STATUS_404).send({ message: 'Пользователь с указанным _id не найден' });
         return;
       }
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
+        res.status(STATUS_400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
         return;
       }
-      res.status(500).send({ message: err.message });
+      res.status(STATUS_500).send({ message: err.message });
     });
 };
 
@@ -63,17 +64,17 @@ const updateUserAvatar = (req, res) => {
   )
     .then((user) => {
       if (!user) {
-        res.status(404).send({ message: 'Пользователь с указанным _id не найден' });
+        res.status(STATUS_404).send({ message: 'Пользователь с указанным _id не найден' });
         return;
       }
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при обновлении аватара' });
+        res.status(STATUS_400).send({ message: 'Переданы некорректные данные при обновлении аватара' });
         return;
       }
-      res.status(500).send({ message: err.message });
+      res.status(STATUS_500).send({ message: err.message });
     });
 };
 
