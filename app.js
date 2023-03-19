@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
 const STATUS_500 = require('./utils/constants');
+const STATUS_404 = require('./utils/constants');
 const NotFoundError = require('./errors/not-found-error');
 
 const port = process.env.PORT || 3000;
@@ -26,25 +27,43 @@ app.use((req, res, next) => {
 app.use('/', usersRoutes);
 app.use('/', cardsRoutes);
 
+// app.use('/*', (req, res, next) => {
+//   const error = new NotFoundError('Страница не найдена');
+//   next(error);
+// });
+
+// app.use((error, req, res, next) => {
+//   res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
+//   next(error);
+// });
+
+// app.use((error, req, res, next) => {
+//   res
+//     .status(error.status)
+//     .send({
+//       message: (error.status === STATUS_500)
+//         ? 'На сервере произошла ошибка'
+//         : error.message,
+//     });
+//   next();
+// });
+
 app.use('/*', (req, res, next) => {
   const error = new NotFoundError('Страница не найдена');
   next(error);
 });
 
-app.use((error, req, res, next) => {
-  res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
-  next(error);
-});
+// app.use((error, req, res, next) => {
+//   if (error instanceof NotFoundError) {
+//     res.status(error.status).send({ message: error.message });
+//   } else {
+//     res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
+//   }
+// });
 
-app.use((error, req, res, next) => {
-  res
-    .status(error.status)
-    .send({
-      message: (error.status === STATUS_500)
-        ? 'На сервере произошла ошибка'
-        : error.message,
-    });
-  next();
+app.use((error, req, res) => {
+  const status = error instanceof NotFoundError ? STATUS_404 : STATUS_500;
+  res.status(status).send({ message: status === STATUS_500 ? 'На сервере произошла ошибка' : 'Страница не найдена' });
 });
 
 app.listen(port);
