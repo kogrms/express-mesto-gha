@@ -31,9 +31,21 @@ app.use('/*', (req, res, next) => {
   next(error);
 });
 
+// app.use((error, req, res, next) => {
+//   res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
+//   next(error);
+// });
+
 app.use((error, req, res, next) => {
-  res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
-  next(error);
+  const { status = STATUS_500, message } = error;
+  res
+    .status(status)
+    .send({
+      message: (status === STATUS_500)
+        ? 'На сервере произошла ошибка'
+        : message,
+    });
+  next();
 });
 
 app.listen(port);
