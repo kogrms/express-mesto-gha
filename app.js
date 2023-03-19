@@ -31,19 +31,18 @@ app.use('/*', (req, res, next) => {
   next(error);
 });
 
-// app.use((error, req, res, next) => {
-//   res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
-//   next(error);
-// });
+app.use((error, req, res, next) => {
+  res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
+  next(error);
+});
 
 app.use((error, req, res, next) => {
-  const { status = STATUS_500, message } = error;
   res
-    .status(status)
+    .status(error.status)
     .send({
-      message: (status === STATUS_500)
+      message: (error.status === STATUS_500)
         ? 'На сервере произошла ошибка'
-        : message,
+        : error.message,
     });
   next();
 });
