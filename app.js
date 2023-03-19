@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
-const STATUS_500 = require('./utils/constants');
-const STATUS_404 = require('./utils/constants');
+const { STATUS_500 } = require('./utils/constants');
+// const { STATUS_404 } = require('./utils/constants');
 const NotFoundError = require('./errors/not-found-error');
 
 const port = process.env.PORT || 3000;
@@ -27,18 +27,19 @@ app.use((req, res, next) => {
 app.use('/', usersRoutes);
 app.use('/', cardsRoutes);
 
-app.use('/*', (req, res, next) => {
+app.use('/*', (req, res) => {
   const error = new NotFoundError('Страница не найдена');
-  next(error);
+  res.status(error.status).send({ message: error.message });
 });
 
 app.use((error, req, res) => {
-  // res.status(STATUS_404).send({ message: 'Страница не найдена' });
-  if (error instanceof NotFoundError) {
-    res.status(STATUS_404).send({ message: 'Страница не найдена' });
-  } else {
-    res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
-  }
+  res
+    .status(error.status)
+    .send({
+      message: (error.status === STATUS_500)
+        ? 'На сервере произошла ошибка'
+        : error.message,
+    });
 });
 
 app.listen(port);
