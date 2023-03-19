@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
-// const STATUS_404 = require('./utils/constants');
+const STATUS_500 = require('./utils/constants');
 const NotFoundError = require('./errors/not-found-error');
 
 const port = process.env.PORT || 3000;
@@ -32,7 +32,7 @@ app.use('/*', (req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-  res.status(error.status || 500).send({ message: error.message });
+  res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
   next(error);
 });
 

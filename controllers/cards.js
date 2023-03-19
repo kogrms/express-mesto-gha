@@ -5,7 +5,7 @@ const getCards = (req, res) => {
   Card.find({})
     .populate('owner')
     .then((cards) => res.send(cards))
-    .catch((err) => res.status(STATUS_500).send({ message: err.message }));
+    .catch(() => res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' }));
 };
 
 const createCard = (req, res) => {
@@ -17,7 +17,7 @@ const createCard = (req, res) => {
         res.status(STATUS_400).send({ message: 'Переданы некорректные данные при создании карточки' });
         return;
       }
-      res.status(STATUS_500).send({ message: err.message });
+      res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -35,7 +35,7 @@ const deleteCard = (req, res) => {
         res.status(STATUS_400).send({ message: 'Переданы некорректные данные карточки' });
         return;
       }
-      res.status(STATUS_500).send({ message: err.message });
+      res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -57,7 +57,7 @@ const likeCard = (req, res) => {
         res.status(STATUS_400).send({ message: 'Переданы некорректные данные для постановки лайка' });
         return;
       }
-      res.status(STATUS_500).send({ message: err.message });
+      res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -79,7 +79,7 @@ const dislikeCard = (req, res) => {
         res.status(STATUS_400).send({ message: 'Переданы некорректные данные для снятия лайка' });
         return;
       }
-      res.status(STATUS_500).send({ message: err.message });
+      res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 

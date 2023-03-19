@@ -5,7 +5,7 @@ const { STATUS_400, STATUS_404, STATUS_500 } = require('../utils/constants');
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) => res.status(STATUS_500).send({ message: err.message }));
+    .catch(() => res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' }));
 };
 
 const createUser = (req, res) => {
@@ -17,7 +17,7 @@ const createUser = (req, res) => {
         res.status(STATUS_400).send({ message: 'Переданы некорректные данные при создании пользователя' });
         return;
       }
-      res.status(STATUS_500).send({ message: err.message });
+      res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -41,7 +41,7 @@ const getUserById = (req, res) => {
         res.status(STATUS_400).send({ message: 'Переданы некорректные данные пользователя' });
         return;
       }
-      res.status(STATUS_500).send({ message: err.message });
+      res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -64,7 +64,7 @@ const updateUserInfo = (req, res) => {
         res.status(STATUS_400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
         return;
       }
-      res.status(STATUS_500).send({ message: err.message });
+      res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -87,7 +87,7 @@ const updateUserAvatar = (req, res) => {
         res.status(STATUS_400).send({ message: 'Переданы некорректные данные при обновлении аватара' });
         return;
       }
-      res.status(STATUS_500).send({ message: err.message });
+      res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
