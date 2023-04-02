@@ -1,5 +1,4 @@
 const { Joi } = require('celebrate');
-const userSchema = require('../../models/user');
 
 module.exports = {
   signup: {
@@ -7,7 +6,7 @@ module.exports = {
       email: Joi.string().required().email(),
       password: Joi.string().required().min(8),
       name: Joi.string().required().min(2).max(30),
-      avatar: userSchema.avatar.pattern.params,
+      avatar: Joi.string().pattern(/(http|https):\/\/([\w.]+\/?)\S*/),
     }),
   },
   signin: {
@@ -20,7 +19,7 @@ module.exports = {
     body: Joi.object().keys({
       email: Joi.string().required().email(),
       name: Joi.string().required().min(2).max(30),
-      avatar: userSchema.avatar.pattern.params,
+      avatar: Joi.string().pattern(/(http|https):\/\/([\w.]+\/?)\S*/),
     }),
   },
   updateAvatar: {
