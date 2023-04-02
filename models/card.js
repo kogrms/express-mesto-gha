@@ -3,27 +3,33 @@ const mongoose = require('mongoose');
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
     minlength: 2,
-    maxlength: 30
+    maxlength: 30,
+    required: true,
+  },
+  owner: {
+    ref: 'user',
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
   },
   link: {
     type: String,
-    required: true
+    required: true,
+    pattern: {
+      params: /(http|https):\/\/([\w.]+\/?)\S*/,
+      message: 'Должен начинаться с http, https и соответствовать спецификации URL, проверьте правильность формата',
+    },
   },
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
+  likes: [{
     ref: 'user',
-    required: true
-  },
-  likes: {
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
-    default: []
-  },
+    type: mongoose.Schema.Types.ObjectId,
+    default: [],
+  }],
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
+cardSchema.set('versionKey', false);
 
 module.exports = mongoose.model('card', cardSchema);

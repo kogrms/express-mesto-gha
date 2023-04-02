@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { celebrate, errors } = require('celebrate');
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
 const auth = require('./middlewares/auth');
@@ -8,6 +9,7 @@ const { createUser, login } = require('./controllers/users');
 const { STATUS_500 } = require('./utils/constants');
 const errorHandler = require('./middlewares/error-handler');
 const NotFoundError = require('./errors/not-found-error');
+const validationSchemas = require('./middlewares/validators/validationSchemas');
 
 const port = process.env.PORT || 3000;
 const url = 'mongodb://localhost:27017/mestodb';
@@ -29,8 +31,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', auth, usersRoutes);
 app.use('/', auth, cardsRoutes);
 
-app.post('/signup', createUser);
-app.post('/signin', login);
+app.post('/signup', celebrate(validationSchemas.signin), createUser);
+app.post('/signin', celebrate(validationSchemas.signin), login);
 
 app.use('/*', (req, res) => {
   const error = new NotFoundError('Страница не найдена');
@@ -48,6 +50,8 @@ app.use((error, req, res) => {
         : error.message,
     });
 });
+
+app.use(errors());
 
 app.listen(port);
 
