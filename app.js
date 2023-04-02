@@ -43,7 +43,7 @@ app.use(errorHandler);
 
 app.use(errors());
 
-app.use((error, req, res) => {
+app.use((error, req, res, next) => {
   res
     .status(error.status)
     .send({
@@ -51,6 +51,7 @@ app.use((error, req, res) => {
         ? 'На сервере произошла ошибка'
         : error.message,
     });
+  next(error);
 });
 
 app.listen(port);
