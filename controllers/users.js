@@ -77,8 +77,8 @@ const getUsers = (req, res) => {
 //     });
 // };
 
-// const createUser = (req, res, next) => {
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
+// const createUser = (req, res) => {
   const {
     name = 'Жак-Ив Кусто',
     about = 'Исследователь',
@@ -105,8 +105,7 @@ const createUser = (req, res) => {
         res.status(STATUS_401).send({ message: 'Пользователь с таким email уже существует' });
         return;
       }
-      res.status(STATUS_500).send({ message: 'На сервере произошла ошибка' });
-      // next(err);
+      next(err);
     });
 };
 

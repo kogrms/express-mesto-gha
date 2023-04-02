@@ -4,6 +4,7 @@ const validationSchemas = require('../middlewares/validators/validationSchemas')
 
 const {
   getUsers,
+  createUser,
   getUserInfo,
   getUserById,
   updateUserInfo,
@@ -11,6 +12,7 @@ const {
 } = require('../controllers/users');
 
 router.get('/users', getUsers);
+router.post('/users', createUser);
 router.get('/users/me', getUserInfo);
 router.get('/users/:userId', getUserById);
 router.patch('/users/me', celebrate(validationSchemas.updateProfile), updateUserInfo);
