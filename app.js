@@ -41,6 +41,8 @@ app.use('/*', (req, res) => {
 
 app.use(errorHandler);
 
+app.use(errors());
+
 app.use((error, req, res) => {
   res
     .status(error.status)
@@ -50,8 +52,6 @@ app.use((error, req, res) => {
         : error.message,
     });
 });
-
-app.use(errors());
 
 app.listen(port);
 
