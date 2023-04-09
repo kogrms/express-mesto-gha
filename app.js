@@ -1,13 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 const {
   celebrate, Joi, Segments, errors,
 } = require('celebrate');
-require('dotenv').config();
 const NotFoundError = require('./errors/not-found-error');
 const { postUsers, login } = require('./controllers/users');
-// const { STATUS_500 } = require('./utils/constants');
+const { STATUS_500 } = require('./utils/constants');
 
 const { MONGOOSE_ENV } = process.env;
 const { PORT = 3000 } = process.env;
