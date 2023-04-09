@@ -1,11 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+
 require('dotenv').config();
 const {
   celebrate, Joi, Segments, errors,
 } = require('celebrate');
+
 const NotFoundError = require('./errors/not-found-error');
+
 const { postUsers, login } = require('./controllers/users');
 const { STATUS_500 } = require('./utils/constants');
 
