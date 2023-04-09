@@ -1,19 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
-const MONGOOSE_ENV = 'mongodb://localhost:27017/mestodb';
-
 const bodyParser = require('body-parser');
-require('dotenv').config();
 const {
   celebrate, Joi, Segments, errors,
 } = require('celebrate');
+require('dotenv').config();
 const NotFoundError = require('./errors/not-found-error');
 const { postUsers, login } = require('./controllers/users');
-const { STATUS_500 } = require('./utils/constants');
+// const { STATUS_500 } = require('./utils/constants');
 
-// const { MONGOOSE_ENV } = process.env;
-const PORT = 3000;
+const { MONGOOSE_ENV } = process.env;
+const { PORT = 3000 } = process.env;
 const app = express();
 
 app.use(bodyParser.json());
@@ -45,16 +42,16 @@ app.use('/*', () => {
 });
 
 app.use(errors());
-app.use((err, req, res, next) => {
-  const { status = STATUS_500, message } = err;
-  res
-    .status(status)
-    .send({
-      message: (status === STATUS_500)
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
-  next();
-});
+// app.use((err, req, res, next) => {
+//   const { status = STATUS_500, message } = err;
+//   res
+//     .status(status)
+//     .send({
+//       message: (status === STATUS_500)
+//         ? 'На сервере произошла ошибка'
+//         : message,
+//     });
+//   next();
+// });
 
 app.listen(PORT);
