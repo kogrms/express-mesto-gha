@@ -11,7 +11,7 @@ const NotFoundError = require('./errors/not-found-error');
 const { postUsers, login } = require('./controllers/users');
 const { STATUS_500 } = require('./utils/constants');
 
-const { MONGOOSE_ENV } = process.env;
+const { MONGOOSE_ENV = 'mongodb://localhost:27017/mestodb' } = process.env;
 const { PORT = 3000 } = process.env;
 const app = express();
 
