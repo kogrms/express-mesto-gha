@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-// require('dotenv').config();
+require('dotenv').config();
 const {
   celebrate, Joi, Segments, errors,
 } = require('celebrate');
@@ -11,8 +11,8 @@ const NotFoundError = require('./errors/not-found-error');
 const { postUsers, login } = require('./controllers/users');
 const { STATUS_500 } = require('./utils/constants');
 
-const MONGOOSE_ENV = 'mongodb://localhost:27017/mestodb';
-const PORT = 3000;
+const { MONGOOSE_ENV } = process.env;
+const { PORT = 3000 } = process.env;
 const app = express();
 
 app.use(bodyParser.json());
