@@ -43,6 +43,19 @@ app.use('/*', () => {
   throw new NotFoundError('Страница не найдена');
 });
 
+// app.use(errors());
+// app.use((err, req, res, next) => {
+//   const { status = STATUS_500, message } = err;
+//   res
+//     .status(status)
+//     .send({
+//       message: (status === STATUS_500)
+//         ? 'На сервере произошла ошибка'
+//         : message,
+//     });
+//   next();
+// });
+
 app.use(errors());
 app.use((err, req, res, next) => {
   const { status = STATUS_500, message } = err;
@@ -50,7 +63,7 @@ app.use((err, req, res, next) => {
     .status(status)
     .send({
       message: (status === STATUS_500)
-        ? 'На сервере произошла ошибка'
+        ? err.message
         : message,
     });
   next();
