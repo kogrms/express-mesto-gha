@@ -61,25 +61,6 @@ module.exports.postUsers = (req, res, next) => {
     });
 };
 
-// module.exports.editUsers = (req, res, next) => {
-//   const { name, about } = req.body;
-//   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
-//     .orFail(new EditError('Пользователь по указанному _id не найден'))
-//     .then((user) => {
-//       if (user == null) {
-//         throw new NotFoundError('Пользователь по указанному _id не найден');
-//       }
-//       return res.send({ data: user });
-//     })
-//     .catch((err) => {
-//       if (err.name === 'ValidationError') {
-//         next(new ValidationError('Переданы некорректные данные при редактировании профиля'));
-//       } else {
-//         next(err);
-//       }
-//     });
-// };
-
 module.exports.editUsers = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })

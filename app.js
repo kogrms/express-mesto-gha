@@ -7,6 +7,7 @@ const {
 } = require('celebrate');
 
 const NotFoundError = require('./errors/not-found-error');
+const auth = require('./middlewares/auth');
 
 const { postUsers, login } = require('./controllers/users');
 const { STATUS_500 } = require('./utils/constants');
@@ -35,6 +36,8 @@ app.post('/signup', celebrate({
     password: Joi.string().required(),
   }),
 }), postUsers);
+
+app.use(auth);
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
