@@ -7,8 +7,9 @@ const { JWT_SECRET = 'dev-key' } = process.env;
 const { STATUS_201 } = require('../utils/constants');
 const NotFoundError = require('../errors/not-found-error');
 const AlreadyExistsError = require('../errors/already-exist-error');
-const EditError = require('../errors/edit-error');
-const LoginError = require('../errors/login-error');
+// const EditError = require('../errors/edit-error');
+// const LoginError = require('../errors/login-error');
+const ValidationError = require('../errors/validation-error');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -52,29 +53,64 @@ module.exports.postUsers = (req, res, next) => {
     .catch((err) => {
       if (err.code === 11000) {
         next(new AlreadyExistsError('Пользователь с таким email уже существует'));
+      } else if (err.name === 'ValidationError') {
+        next(new ValidationError('Переданы некорректные данные при создании пользователя'));
+      } else {
+        next(err);
       }
     });
 };
 
+// module.exports.editUsers = (req, res, next) => {
+//   const { name, about } = req.body;
+//   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+//     .orFail(new EditError('Пользователь по указанному _id не найден'))
+//     .then((user) => {
+//       if (user == null) {
+//         throw new NotFoundError('Пользователь по указанному _id не найден');
+//       }
+//       return res.send({ data: user });
+//     })
+//     .catch((err) => {
+//       if (err.name === 'ValidationError') {
+//         next(new ValidationError('Переданы некорректные данные при редактировании профиля'));
+//       } else {
+//         next(err);
+//       }
+//     });
+// };
+
 module.exports.editUsers = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
-    .orFail(new EditError('Пользователь по указанному _id не найден'))
+    .orFail(new NotFoundError('Пользователь по указанному _id не найден'))
     .then((user) => {
       if (user == null) {
         throw new NotFoundError('Пользователь по указанному _id не найден');
       }
       return res.send({ data: user });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new ValidationError('Переданы некорректные данные при редактировании профиля'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.editAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar }, { runValidators: true, new: true })
-    .orFail(new EditError('Пользователь по указанному _id не найден'))
+    .orFail(new NotFoundError('Пользователь по указанному _id не найден'))
     .then((user) => res.send({ data: user }))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new ValidationError('Переданы некорректные данные при редактировании профиля'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.login = (req, res, next) => {
@@ -86,5 +122,5 @@ module.exports.login = (req, res, next) => {
         token: jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' }),
       });
     })
-    .catch((err) => next(new LoginError(err.message)));
+    .catch(next);
 };

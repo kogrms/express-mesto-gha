@@ -16,7 +16,7 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     pattern: {
-      params: /(http|https):\/\/([\w.]+\/?)\S*/,
+      params: /^https?:\/\/(?:[\w-]+\.)+[a-z]{2,}(?:\/\S*)?$/i,
       message: 'Должен начинаться с http, https и соответствовать спецификации URL, проверьте правильность формата',
     },
   },

@@ -1,6 +1,7 @@
 const { STATUS_201 } = require('../utils/constants');
 const DeleteCardError = require('../errors/delete-card-error');
 const NotFoundError = require('../errors/not-found-error');
+const ValidationError = require('../errors/validation-error');
 const Card = require('../models/card');
 
 module.exports.getCard = (req, res, next) => {
@@ -30,7 +31,14 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, owner: req.user._id, link })
     .then((card) => res.status(STATUS_201).send({ data: card }))
-    .catch(next);
+    // .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        throw new ValidationError('Переданы некорректные данные при создании карточки');
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
