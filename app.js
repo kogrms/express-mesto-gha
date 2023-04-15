@@ -9,6 +9,7 @@ const {
 
 const NotFoundError = require('./errors/not-found-error');
 const auth = require('./middlewares/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { postUsers, login } = require('./controllers/users');
 const { STATUS_500 } = require('./utils/constants');
@@ -22,6 +23,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect(MONGOOSE_ENV);
+
+app.use(requestLogger);
 
 app.post('/signin', celebrate({
   [Segments.BODY]: Joi.object().keys({
@@ -47,6 +50,8 @@ app.use('/cards', require('./routes/cards'));
 app.use('/*', () => {
   throw new NotFoundError('Страница не найдена');
 });
+
+app.use(errorLogger);
 
 app.use(errors());
 app.use((err, req, res, next) => {
