@@ -1,7 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-require('dotenv').config();
 const cors = require('cors');
 const {
   celebrate, Joi, Segments, errors,
@@ -14,7 +14,6 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { postUsers, login } = require('./controllers/users');
 const { STATUS_500 } = require('./utils/constants');
 
-const { MONGOOSE_ENV = 'mongodb://localhost:27017/mestodb' } = process.env;
 const { PORT = 3000 } = process.env;
 
 const options = {
@@ -38,7 +37,7 @@ app.use('*', cors(options));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect(MONGOOSE_ENV);
+mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.options('*', (req, res) => {
   res.set('Access-Control-Allow-Origin', req.header('origin') || '*');
