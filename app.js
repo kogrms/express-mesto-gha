@@ -16,7 +16,24 @@ const { STATUS_500 } = require('./utils/constants');
 
 const { MONGOOSE_ENV = 'mongodb://localhost:27017/mestodb' } = process.env;
 const { PORT = 3000 } = process.env;
+
+const options = {
+  origin: [
+    'https://localhost:3001',
+    'http://localhost:3001',
+    'https://kogrms.nomoredomains.monster/',
+    'http://kogrms.nomoredomains.monster/',
+  ],
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
+  credentials: true,
+};
+
 const app = express();
+
+app.use('*', cors(options));
 
 app.use(cors());
 app.use(bodyParser.json());
