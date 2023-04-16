@@ -21,8 +21,8 @@ const options = {
   origin: [
     'https://localhost:3001',
     'http://localhost:3001',
-    'https://kogrms.nomoredomains.monster/',
-    'http://kogrms.nomoredomains.monster/',
+    'https://kogrms.nomoredomains.monster',
+    'http://kogrms.nomoredomains.monster',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
@@ -39,6 +39,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect(MONGOOSE_ENV);
+
+app.options('*', (req, res) => {
+  res.set('Access-Control-Allow-Origin', req.header('origin') || '*');
+  res.set('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
+  res.set('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  res.status(204).end();
+});
 
 app.use(requestLogger);
 
