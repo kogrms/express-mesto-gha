@@ -7,8 +7,6 @@ const { JWT_SECRET = 'dev-secret' } = process.env;
 const { STATUS_201 } = require('../utils/constants');
 const NotFoundError = require('../errors/not-found-error');
 const AlreadyExistsError = require('../errors/already-exist-error');
-// const EditError = require('../errors/edit-error');
-// const LoginError = require('../errors/login-error');
 const ValidationError = require('../errors/validation-error');
 
 module.exports.getUsers = (req, res, next) => {
@@ -21,11 +19,17 @@ module.exports.getUsersById = (req, res, next) => {
   User.findById(req.params.userId)
     .then((users) => {
       if (users == null) {
-        throw new NotFoundError('Пользователь по указанному _id не найден');
+        next(new NotFoundError('Пользователь по указанному _id не найден'));
       }
       return res.send({ data: users });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new ValidationError('Введены некорректные данные пользователя'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.getUserNow = (req, res, next) => {
@@ -65,12 +69,7 @@ module.exports.editUsers = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail(new NotFoundError('Пользователь по указанному _id не найден'))
-    .then((user) => {
-      if (user == null) {
-        throw new NotFoundError('Пользователь по указанному _id не найден');
-      }
-      return res.send({ data: user });
-    })
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные при редактировании профиля'));
